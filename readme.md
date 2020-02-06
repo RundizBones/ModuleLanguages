@@ -2,7 +2,10 @@ Languages module for [RundizBones] framework.
 
 This module is for switch to selected URL by cookie or URL segment (depend on configuration on your framework installation).
 
-## REST API URL.
+### Installation
+Download and extract files into **/Modules/Languages** folder.
+
+### REST API URL.
 | Method | URL | Params | Description |
 | --- | --- | --- | --- |
 | `GET` | **/languages** | None | Get all languages to render in HTML such as select box. |
