@@ -5,10 +5,10 @@
 
 
 /* @var $Rc \FastRoute\RouteCollector */
-/* @var $this \System\Router */
+/* @var $this \Rdb\System\Router */
 
 
 $Rc->addGroup('/languages', function(\FastRoute\RouteCollector $Rc) {
-    $Rc->addRoute('GET', '', '\\Modules\\Languages\\Controllers\\Languages:index');
-    $Rc->addRoute('PUT', '/update', '\\Modules\\Languages\\Controllers\\Languages:update');
+    $Rc->addRoute('GET', '', '\\Rdb\\Modules\\Languages\\Controllers\\Languages:index');
+    $Rc->addRoute('PUT', '/update', '\\Rdb\\Modules\\Languages\\Controllers\\Languages:update');
 });

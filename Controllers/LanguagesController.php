@@ -4,7 +4,7 @@
  */
 
 
-namespace Modules\Languages\Controllers;
+namespace Rdb\Modules\Languages\Controllers;
 
 
 /**
@@ -12,7 +12,7 @@ namespace Modules\Languages\Controllers;
  * 
  * @since 0.1
  */
-class LanguagesController extends \Modules\RdbAdmin\Controllers\BaseController
+class LanguagesController extends \Rdb\Modules\RdbAdmin\Controllers\BaseController
 {
 
 
@@ -25,14 +25,14 @@ class LanguagesController extends \Modules\RdbAdmin\Controllers\BaseController
     {
         // processing part ----------------------------------------------------------------------------------------------------
         if ($this->Container->has('Config')) {
-            /* @var $Config \System\Config */
+            /* @var $Config \Rdb\System\Config */
             $Config = $this->Container->get('Config');
             $Config->setModule('');
         } else {
-            $Config = new \System\Config();
+            $Config = new \Rdb\System\Config();
         }
 
-        $Url = new \System\Libraries\Url($this->Container);
+        $Url = new \Rdb\System\Libraries\Url($this->Container);
 
         $output = [];
         $output['languages'] = $Config->get('languages', 'language', []);
@@ -98,16 +98,16 @@ class LanguagesController extends \Modules\RdbAdmin\Controllers\BaseController
     {
         // processing part ----------------------------------------------------------------------------------------------------
         if ($this->Container->has('Config')) {
-            /* @var $Config \System\Config */
+            /* @var $Config \Rdb\System\Config */
             $Config = $this->Container->get('Config');
             $Config->setModule('');
         } else {
-            $Config = new \System\Config();
+            $Config = new \Rdb\System\Config();
         }
 
         parse_str(file_get_contents('php://input'), $_PUT);
 
-        $Url = new \System\Libraries\Url($this->Container);
+        $Url = new \Rdb\System\Libraries\Url($this->Container);
 
         $output = [];
 
