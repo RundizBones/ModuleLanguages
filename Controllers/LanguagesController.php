@@ -68,12 +68,13 @@ class LanguagesController extends \Rdb\Modules\RdbAdmin\Controllers\BaseControll
     /**
      * Multibyte version of `substr_replace()`.
      * 
-     * @link https://shkspr.mobi/blog/2012/09/a-utf-8-aware-substr_replace-for-use-in-app-net/
-     * @param string $original
-     * @param string $replacement
-     * @param int $position
-     * @param type $length
-     * @return string
+     * @link https://shkspr.mobi/blog/2012/09/a-utf-8-aware-substr_replace-for-use-in-app-net/ Original source code.
+     * @see https://www.php.net/manual/en/function.substr-replace.php for more info.
+     * @param string $original The original string.
+     * @param string $replacement The replacement string.
+     * @param int $position The offset to begins.
+     * @param mixed $length The length of the portion of string.
+     * @return string Return result string.
      */
     protected function mb_substr_replace(string $original, string $replacement, int $position, $length = null): string
     {
