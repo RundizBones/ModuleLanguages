@@ -105,15 +105,13 @@ class LanguagesController extends \Rdb\Modules\RdbAdmin\Controllers\BaseControll
             $Config = new \Rdb\System\Config();
         }
 
-        parse_str(file_get_contents('php://input'), $_PUT);
-
         $Url = new \Rdb\System\Libraries\Url($this->Container);
 
         $output = [];
 
         $allLanguages = $Config->get('languages', 'language', []);
         $defaultLanguage = $Config->getDefaultLanguage($allLanguages);
-        $languageID = $_PUT['rundizbones-languages'];
+        $languageID = $this->Input->put('rundizbones-languages');
         if (!array_key_exists($languageID, $allLanguages)) {
             // if the language that was set is not exists in languages config.
             // use default.
@@ -127,19 +125,19 @@ class LanguagesController extends \Rdb\Modules\RdbAdmin\Controllers\BaseControll
             $cookieExpires = 90;// unit in days.
             setcookie($languageCookieName, $languageID, (time() + (60*60*24*$cookieExpires)), '/');
             unset($cookieExpires, $languageCookieName);
-            $output['redirectUrl'] = $_PUT['currentUrl'];
+            $output['redirectUrl'] = $this->Input->put('currentUrl');
         } else {
             // if config is using url to set, detect language.
             $appBase = $Url->getAppBasedPath() . '/';
             if ($Config->get('languageUrlDefaultVisible', 'language', false) === true) {
                 // if config was set to show default language in the URL.
-                $output['redirectUrl'] = $this->mb_substr_replace($_PUT['currentUrl'], $appBase . $languageID . '/', 0, mb_strlen($appBase));
+                $output['redirectUrl'] = $this->mb_substr_replace($this->Input->put('currentUrl'), $appBase . $languageID . '/', 0, mb_strlen($appBase));
             } else {
                 // if config was set to NOT show default language in the URL.
                 if ($languageID === $defaultLanguage) {
-                    $output['redirectUrl'] = $_PUT['currentUrl'];
+                    $output['redirectUrl'] = $this->Input->put('currentUrl');
                 } else {
-                    $output['redirectUrl'] = $this->mb_substr_replace($_PUT['currentUrl'], $appBase . $languageID . '/', 0, mb_strlen($appBase));
+                    $output['redirectUrl'] = $this->mb_substr_replace($this->Input->put('currentUrl'), $appBase . $languageID . '/', 0, mb_strlen($appBase));
                 }
             }
             unset($appBase);
