@@ -1,3 +1,4 @@
 .git-ftp-ignore
 .gitattributes
 .gitignore
+.disabled
