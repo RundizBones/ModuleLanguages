@@ -66,28 +66,6 @@ class LanguagesController extends \Rdb\Modules\RdbAdmin\Controllers\BaseControll
 
 
     /**
-     * Multibyte version of `substr_replace()`.
-     * 
-     * @link https://shkspr.mobi/blog/2012/09/a-utf-8-aware-substr_replace-for-use-in-app-net/ Original source code.
-     * @see https://www.php.net/manual/en/function.substr-replace.php for more info.
-     * @param string $original The original string.
-     * @param string $replacement The replacement string.
-     * @param int $position The offset to begins.
-     * @param mixed $length The length of the portion of string.
-     * @return string Return result string.
-     */
-    protected function mb_substr_replace(string $original, string $replacement, int $position, $length = null): string
-    {
-        $startString = mb_substr($original, 0, $position, 'UTF-8');
-        $endString = mb_substr($original, $position + $length, mb_strlen($original), 'UTF-8');
-
-        $out = $startString . $replacement . $endString;
-
-        return $out;
-    }// mb_substr_replace
-
-
-    /**
      * Update current language and get redirect URL.
      * 
      * The PUT data must contain 'currentUrl', 'rundizbones-languages'.<br>
@@ -119,6 +97,7 @@ class LanguagesController extends \Rdb\Modules\RdbAdmin\Controllers\BaseControll
             $languageID = $defaultLanguage;
         }
         unset($allLanguages);
+        $currentUrl = $this->Input->put('currentUrl');
 
         if ($Config->get('languageMethod', 'language', 'url') === 'cookie') {
             // if config is using cookie to set, detect language.
@@ -126,24 +105,79 @@ class LanguagesController extends \Rdb\Modules\RdbAdmin\Controllers\BaseControll
             $cookieExpires = 90;// unit in days.
             setcookie($languageCookieName, $languageID, (time() + (60*60*24*$cookieExpires)), '/');
             unset($cookieExpires, $languageCookieName);
-            $output['redirectUrl'] = $this->Input->put('currentUrl');
+            $output['redirectUrl'] = $currentUrl;
         } else {
             // if config is using url to set, detect language.
+            require_once MODULE_PATH . DIRECTORY_SEPARATOR . 'Languages' . DIRECTORY_SEPARATOR . 'Helpers' . DIRECTORY_SEPARATOR . 'multibyte.php';
             $appBase = $Url->getAppBasedPath() . '/';
             if ($Config->get('languageUrlDefaultVisible', 'language', false) === true) {
                 // if config was set to show default language in the URL.
-                $output['redirectUrl'] = $this->mb_substr_replace($this->Input->put('currentUrl'), $appBase . $languageID . '/', 0, mb_strlen($appBase));
+                $output['redirectUrl'] = mb_substr_replace($currentUrl, $appBase . $languageID . '/', 0, mb_strlen($appBase));
             } else {
                 // if config was set to NOT show default language in the URL.
                 if ($languageID === $defaultLanguage) {
-                    $output['redirectUrl'] = $this->Input->put('currentUrl');
+                    $output['redirectUrl'] = $currentUrl;
                 } else {
-                    $output['redirectUrl'] = $this->mb_substr_replace($this->Input->put('currentUrl'), $appBase . $languageID . '/', 0, mb_strlen($appBase));
+                    $output['redirectUrl'] = mb_substr_replace($currentUrl, $appBase . $languageID . '/', 0, mb_strlen($appBase));
                 }
             }
             unset($appBase);
         }
-        unset($defaultLanguage, $languageID, $Url);
+
+        if ($this->Container->has('Plugins')) {
+            /* @var $Plugins \Rdb\Modules\RdbAdmin\Libraries\Plugins */
+            $Plugins = $this->Container->get('Plugins');
+            if ($this->Container->has('Logger')) {
+                /* @var $Logger \Rdb\System\Libraries\Logger */
+                $Logger = $this->Container->get('Logger');
+                $logChannel = 'modules/languages/controllers/languagescontroller/updateaction';
+            }
+            /*
+             * PluginHook: Rdb\Modules\Languages\Controllers\LanguagesController->updateAction.afterGetRedirectUrl
+             * PluginHookDescription: Hook after get redirect URL on change language.
+             * PluginHookParam: associative array:<br>
+             *              `redirectUrl` (string) The redirect URL.<br>
+             *              `currentUrl` (string) Current URL before redirect.<br>
+             *              `configLanguageMethod` (string) Config value of language detection method.<br>
+             *              `configLanguageUrlDefaultVisible` (bool) Config value of default language URL will be visible or not (if language method is URL).<br>
+             *              `defaultLanguage` (string) Default language.<br>
+             *              `languageID` (string) Selected language ID.<br>
+             * PluginHookReturn: Expect return redirect URL as string.
+             * PluginHookSince: 1.0.1
+             */
+            $redirectUrl = $Plugins->doHook(
+                __CLASS__ . '->' . __FUNCTION__ . '.afterGetRedirectUrl',
+                [
+                    'redirectUrl' => $output['redirectUrl'],
+                    'currentUrl' => $currentUrl,
+                    'configLanguageMethod' => $Config->get('languageMethod', 'language', 'url'),
+                    'configLanguageUrlDefaultVisible' => $Config->get('languageUrlDefaultVisible', 'language', false),
+                    'defaultLanguage' => $defaultLanguage,
+                    'languageID' => $languageID,
+                ]
+            );
+
+            if (isset($Logger)) {
+                $Logger->write($logChannel, 0, 'Do hook for update (change) language. Here is the result {redirectUrl}. The last array will be use.', ['redirectUrl' => $redirectUrl]);
+            }
+
+            if (is_array($redirectUrl)) {
+                $lastRedirectUrl = '';
+                foreach ($redirectUrl as $eachRedirectUrl) {
+                    if (is_string($eachRedirectUrl) && !empty(trim($eachRedirectUrl))) {
+                        $lastRedirectUrl = $eachRedirectUrl;
+                    }
+                }
+                unset($eachRedirectUrl);
+
+                if (!empty($lastRedirectUrl)) {
+                    $output['redirectUrl'] = $lastRedirectUrl;
+                }
+                unset($lastRedirectUrl);
+            }
+            unset($Plugins, $redirectUrl);
+        }// endif; plugins
+        unset($currentUrl, $defaultLanguage, $languageID, $Url);
 
         // display, response part ---------------------------------------------------------------------------------------------
         if ($this->Input->isNonHtmlAccept() || $this->Input->isXhr()) {

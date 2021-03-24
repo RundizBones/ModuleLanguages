@@ -1,6 +1,11 @@
 # Rundizbones Languages module.
 This module is require "RdbAdmin" module.
 
+## v1.0.1
+2021-03-24
+
+* Add plugin hook on update (change) language.
+
 ## v1.0
 2021-01-27
 
