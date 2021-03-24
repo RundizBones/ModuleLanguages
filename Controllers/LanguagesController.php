@@ -102,7 +102,6 @@ class LanguagesController extends \Rdb\Modules\RdbAdmin\Controllers\BaseControll
 
         if ($Config->get('languageMethod', 'language', 'url') === 'cookie') {
             // if config is using cookie to set, detect language.
-            // get current language ID before change.
             $languageCookieName = 'rundizbones_language' . $Config->get('suffix', 'cookie');
             $cookieExpires = 90;// unit in days.
             setcookie($languageCookieName, $languageID, (time() + (60*60*24*$cookieExpires)), '/');
