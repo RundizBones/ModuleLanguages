@@ -9,7 +9,7 @@ Download and extract files into **/Modules/Languages** folder.
 | Method | URL | Params | Description |
 | --- | --- | --- | --- |
 | `GET` | **/languages** | None | Get all languages to render in HTML such as select box. |
-| `PUT` | **/languages/update** | `currentUrl` (string) Your current URL.<br>`rundizbones-languages` (string) The language ID same as in configuration that you want to change to. | Change to selected language |
+| `PUT` | **/languages/update** | `currentUrl` (string) Your current URL.<br>`rundizbones-languages` (string) The language ID same as in configuration that you want to change to.<br>`currentLanguageID` (string) Current language ID before changing. | Change to selected language |
 
 Please note that the URL should begins with your installation path. Example your installation is in **/myapp** then the URL must changed to **/myapp/languages**.
 
