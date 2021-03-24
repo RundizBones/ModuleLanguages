@@ -98,11 +98,9 @@ class LanguagesController extends \Rdb\Modules\RdbAdmin\Controllers\BaseControll
         }
         unset($allLanguages);
         $currentUrl = $this->Input->put('currentUrl');
-        $currentLanguageID = $this->Input->put('currentLanguageID');
 
         if ($Config->get('languageMethod', 'language', 'url') === 'cookie') {
             // if config is using cookie to set, detect language.
-            // get current language ID before change.
             $languageCookieName = 'rundizbones_language' . $Config->get('suffix', 'cookie');
             $cookieExpires = 90;// unit in days.
             setcookie($languageCookieName, $languageID, (time() + (60*60*24*$cookieExpires)), '/');
@@ -144,7 +142,6 @@ class LanguagesController extends \Rdb\Modules\RdbAdmin\Controllers\BaseControll
              *              `configLanguageUrlDefaultVisible` (bool) Config value of default language URL will be visible or not (if language method is URL).<br>
              *              `defaultLanguage` (string) Default language.<br>
              *              `languageID` (string) Selected language ID.<br>
-             *              `currentLanguageID` (string) Current language ID before change.<br>
              * PluginHookReturn: Expect return redirect URL as string.
              * PluginHookSince: 1.0.1
              */
@@ -157,7 +154,6 @@ class LanguagesController extends \Rdb\Modules\RdbAdmin\Controllers\BaseControll
                     'configLanguageUrlDefaultVisible' => $Config->get('languageUrlDefaultVisible', 'language', false),
                     'defaultLanguage' => $defaultLanguage,
                     'languageID' => $languageID,
-                    'currentLanguageID' => $currentLanguageID,
                 ]
             );
 
@@ -181,7 +177,7 @@ class LanguagesController extends \Rdb\Modules\RdbAdmin\Controllers\BaseControll
             }
             unset($Plugins, $redirectUrl);
         }// endif; plugins
-        unset($currentLanguageID, $currentUrl, $defaultLanguage, $languageID, $Url);
+        unset($currentUrl, $defaultLanguage, $languageID, $Url);
 
         // display, response part ---------------------------------------------------------------------------------------------
         if ($this->Input->isNonHtmlAccept() || $this->Input->isXhr()) {
