@@ -14,7 +14,7 @@ Download and extract files into **/Modules/Languages** folder.
 Please note that the URL should begins with your installation path. Example your installation is in **/myapp** then the URL must changed to **/myapp/languages**.
 
 Example work flow:<br>
-`PUT` **/languages/update** with params: `currentUrl='/contact'` `rundizbones-languages='en-US'`<br>
+`PUT` **/languages/update** with params: `currentUrl='/contact'` `rundizbones-languages='en-US'` `currentLanguageID='th'`<br>
 Result will be returned: `redirectUrl` **/en-US/contact**
 
 [RundizBones]:https://github.com/RundizBones/framework
