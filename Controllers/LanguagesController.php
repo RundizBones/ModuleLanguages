@@ -136,7 +136,7 @@ class LanguagesController extends \Rdb\Modules\RdbAdmin\Controllers\BaseControll
             /*
              * PluginHook: Rdb\Modules\Languages\Controllers\LanguagesController->updateAction.afterGetRedirectUrl
              * PluginHookDescription: Hook after get redirect URL on change language.
-             * PluginHookParam: associative array:<br>
+             * PluginHookParam: <br>
              *              `redirectUrl` (string) The redirect URL.<br>
              *              `currentUrl` (string) Current URL before redirect.<br>
              *              `configLanguageMethod` (string) Config value of language detection method.<br>
