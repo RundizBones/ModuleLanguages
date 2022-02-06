@@ -147,24 +147,25 @@ class LanguagesController extends \Rdb\Modules\RdbAdmin\Controllers\BaseControll
              * PluginHookReturn: Expect return redirect URL as string.
              * PluginHookSince: 1.0.1
              */
+            $hookArgs = [
+                'redirectUrl' => $output['redirectUrl'],
+                'currentUrl' => $currentUrl,
+                'configLanguageMethod' => $Config->get('languageMethod', 'language', 'url'),
+                'configLanguageUrlDefaultVisible' => $Config->get('languageUrlDefaultVisible', 'language', false),
+                'defaultLanguage' => $defaultLanguage,
+                'languageID' => $languageID,
+                'currentLanguageID' => $currentLanguageID,
+            ];
             $redirectUrl = $Plugins->doHook(
                 __CLASS__ . '->' . __FUNCTION__ . '.afterGetRedirectUrl',
-                [
-                    'redirectUrl' => $output['redirectUrl'],
-                    'currentUrl' => $currentUrl,
-                    'configLanguageMethod' => $Config->get('languageMethod', 'language', 'url'),
-                    'configLanguageUrlDefaultVisible' => $Config->get('languageUrlDefaultVisible', 'language', false),
-                    'defaultLanguage' => $defaultLanguage,
-                    'languageID' => $languageID,
-                    'currentLanguageID' => $currentLanguageID,
-                ]
+                $hookArgs
             );
 
             if (isset($Logger)) {
                 $Logger->write($logChannel, 0, 'Do hook for update (change) language. Here is the result {redirectUrl}. The last array will be use.', ['redirectUrl' => $redirectUrl]);
             }
 
-            if (is_array($redirectUrl)) {
+            if (is_array($redirectUrl) && $redirectUrl !== $hookArgs) {
                 $lastRedirectUrl = '';
                 foreach ($redirectUrl as $eachRedirectUrl) {
                     if (is_string($eachRedirectUrl) && !empty(trim($eachRedirectUrl))) {
@@ -178,7 +179,7 @@ class LanguagesController extends \Rdb\Modules\RdbAdmin\Controllers\BaseControll
                 }
                 unset($lastRedirectUrl);
             }
-            unset($Plugins, $redirectUrl);
+            unset($hookArgs, $Plugins, $redirectUrl);
         }// endif; plugins
         unset($currentLanguageID, $currentUrl, $defaultLanguage, $languageID, $Url);
 
