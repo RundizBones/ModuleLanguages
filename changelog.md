@@ -1,8 +1,13 @@
 # Rundizbones Languages module.
 This module is require "RdbAdmin" module.
 
+## v1.0.4
+2023-02-03
+
+* Add back `mb_substr_replace()` function.
+
 ## v1.0.3
-2022-02-03
+2023-02-03
 
 * Accept `currentLanguageID` parameter in the `/languages/update` route and `PUT` method.
 * Fix plugin check returned value.
