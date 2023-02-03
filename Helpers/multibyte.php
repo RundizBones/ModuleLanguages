@@ -34,3 +34,48 @@ function languagesModuleReplaceURL(string $currentURL, string $newPrefixURL, str
     $endString = mb_substr($currentURL, $start + $appBaseURLLength, $currentURLLength - $start - $appBaseURLLength, $encoding);
     return  $startString . $newPrefixURL . $endString;
 }// languagesModuleReplaceURL
+
+
+if (!function_exists('mb_substr_replace')) {
+    /**
+     * Multibyte version of `substr_replace()`.
+     * 
+     * There are many modules/plugins use this function. Do not remove it.
+     * 
+     * @link https://www.php.net/manual/en/function.substr-replace.php#90146 Original source code.
+     * @see https://www.php.net/manual/en/function.substr-replace.php for more info.
+     * @since 1.0.1
+     * @param string $string The original string.
+     * @param string $replacement The replacement string.
+     * @param int $start The offset to begins.
+     * @param int|null $length The length of the portion of string.
+     * @param string|null $encoding The multibyte functions encoding.
+     * @return string Return result string.
+     */
+    function mb_substr_replace(string $string, string $replacement, int $start, $length = null, $encoding = null): string
+    {
+        $string_length = (is_null($encoding) === true) ? mb_strlen($string) : mb_strlen($string, $encoding);
+            
+        if ($start < 0) {
+            $start = max(0, $string_length + $start);
+        } else if ($start > $string_length) {
+            $start = $string_length;
+        }
+
+        if ($length < 0) {
+            $length = max(0, $string_length - $start + $length);
+        } else if ((is_null($length) === true) || ($length > $string_length)) {
+            $length = $string_length;
+        }
+
+        if (($start + $length) > $string_length) {
+            $length = $string_length - $start;
+        }
+
+        if (is_null($encoding) === true) {
+            return mb_substr($string, 0, $start) . $replacement . mb_substr($string, $start + $length, $string_length - $start - $length);
+        }
+
+        return mb_substr($string, 0, $start, $encoding) . $replacement . mb_substr($string, $start + $length, $string_length - $start - $length, $encoding);
+    }// mb_substr_replace
+}
