@@ -113,13 +113,13 @@ class LanguagesController extends \Rdb\Modules\RdbAdmin\Controllers\BaseControll
             $appBase = $Url->getAppBasedPath() . '/';
             if ($Config->get('languageUrlDefaultVisible', 'language', false) === true) {
                 // if config was set to show default language in the URL.
-                $output['redirectUrl'] = mb_substr_replace($currentUrl, $appBase . $languageID . '/', 0, mb_strlen($appBase));
+                $output['redirectUrl'] = languagesModuleReplaceURL($currentUrl, $appBase . $languageID . '/', $appBase);
             } else {
                 // if config was set to NOT show default language in the URL.
                 if ($languageID === $defaultLanguage) {
                     $output['redirectUrl'] = $currentUrl;
                 } else {
-                    $output['redirectUrl'] = mb_substr_replace($currentUrl, $appBase . $languageID . '/', 0, mb_strlen($appBase));
+                $output['redirectUrl'] = languagesModuleReplaceURL($currentUrl, $appBase . $languageID . '/', $appBase);
                 }
             }
             unset($appBase);
