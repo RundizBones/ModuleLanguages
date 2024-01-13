@@ -1,0 +1,10 @@
+{
+    "moduleName": "Languages",
+    "rdb": true,
+    "copyPatterns": "$default",
+    "ignorePatterns": "$default",
+    "update": {
+        "updateModule": false,
+        "updateComposer": false
+    }
+}
