@@ -1,4 +1,5 @@
 .backup
 .disabled
 .dist
+.phpunit.cache
 node_modules
