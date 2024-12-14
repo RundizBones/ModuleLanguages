@@ -3,6 +3,12 @@
     "rdb": true,
     "copyPatterns": "$default",
     "ignorePatterns": "$default",
+    "pack": {
+        "developmentPatterns": "$default",
+        "productionPatterns": "$default",
+        "versionHeaderFile": null,
+        "zipFilePrefix": "Languages"
+    },
     "update": {
         "updateModule": false,
         "updateComposer": false
