@@ -1,5 +1,5 @@
-.backup
-.disabled
-.dist
-.phpunit.cache
-node_modules
+/.backup/
+/.disabled
+/.dist/
+/.phpunit.cache
+/node_modules
